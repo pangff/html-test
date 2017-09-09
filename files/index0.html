@@ -1,0 +1,65 @@
+<html>
+
+<head >
+    <meta http-equiv = "content-type" content = "text/html; charset=UTF-8" />
+    <title>imitate slow html request</title>
+    <script>
+        let map = new Map();
+        let time = Date.now();
+        map.set("init readyState:",document.readyState+" at time=="+time)
+        map.set("init performance timing\n:",JSON.stringify(performance.timing))
+        function onLoad() {
+            map.set("onLoad:","onLoad fired at : =="+Date.now())
+
+            var domComplete =  performance.timing.domComplete ;
+            var domContentLoadedEventStart =  performance.timing.domContentLoadedEventStart ;
+            var navigationStart = performance.timing.navigationStart;
+            var page_load_time = domComplete - navigationStart;
+            var responseStart = performance.timing.responseStart;
+            var responseEnd = performance.timing.responseEnd;
+            var domainLookupStart = performance.timing.domainLookupStart;
+
+            var domLoading  = performance.timing.domLoading ;
+            var domComplete  = performance.timing.domComplete ;
+
+            map.set("domComplete - navigationStart(页面加载总时间, 包括js、css、图片异步资源):",page_load_time)
+            map.set("domContentLoadedEventStart - navigationStart(index.html单页面加载总时间,因为css和js下载阻止了index.html的后续加载):",(domContentLoadedEventStart - navigationStart))
+            map.set("responseEnd - domainLookupStart(index.html单页面网络请求时间,包括DNS、connection，因为和network中index请求时间接近，而css、js需要6s):",(responseEnd - domainLookupStart))
+
+            map.set("responseStart:",performance.timing.responseStart)
+            map.set("domLoading:",domLoading)
+            map.set("responseEnd:",responseEnd)
+            map.set("domComplete:",domComplete)
+
+            map.set("domLoading-responseStart:",(domLoading-responseStart)+">0 说明网页解析是网络请求第一次返回之后开始")
+
+            setTimeout(function(){
+                console.log("logs stack:=========================================================")
+                map.set("end performance timing:\n",JSON.stringify(performance.timing))
+                for (var key of map.keys()) {
+                    console.log(key+" "+map.get(key));
+                }
+            },2000)
+
+        }
+
+        let index = 1;
+        document.addEventListener("readystatechange",function(){
+            index++;
+            let time=Date.now();
+            console.log("readystatechange EVENT fired:"+(document.readyState)+" at time=="+time);
+            map.set("readystatechange"+index+":",document.readyState+" at time=="+time)
+        });
+        document.addEventListener("DOMContentLoaded", function(event) {
+            let time=Date.now();
+            console.log("DOMContentLoaded EVENT fired at time=="+time);
+            map.set("DOMContentLoaded Event:","DOM fully loaded and parsed== at time=="+time)
+        });
+        window.addEventListener("load", function(event) {
+            let time=Date.now();
+            console.log("load EVENT fired at time=="+time);
+            map.set("load Event:","All resources finished loading! at time=="+time)
+        });
+    </script>
+
+</head>
