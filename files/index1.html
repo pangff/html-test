@@ -2,6 +2,12 @@
 
     <h3>请配合查看控制台信息进行页面测试</h3>
 
+    <div>
+        <img src="test2.png" style="width: 100px;">
+        <br/>
+        <video src="video.mp4" preload="none" autoplay style="width: 100px;height: 100px"/>
+    </div>
+
     <div><h1>网页加载测试：</h1></div>
     <ul>
 
@@ -17,13 +23,11 @@
 
     <ul>
         <li>responseEnd请求结束时间只针对index.html(主文档请求结束时间)</li>
-        <li>processing阶段(domLoading>>>domComplete)是html文档解析总阶段，但包含了html文档内js、css、以及<span style="color: red"><strong>图片</strong></span>的下载与解析</li>
-        <li>html非异步资源的加载阶段(domLoading>>>domContentLoadedEventStart)</li>
-        <li>html异步资源的加载阶段段(domContentLoadedEventStart>>>domComplete)</li>
-        <li>html从上向下解析，边解析边展示，会被js、css的下载、解析、执行所阻塞。全局js会在html文档解析阶段执行，如果js有耗时操作一样会阻塞html</li>
+        <li>processing阶段(domLoading>>>domComplete)是html文档解析总阶段，但包含了html文档内js、css、以及<span style="color: red"><strong>图片、视频</strong></span>的下载与解析</li>
+        <li>html从上向下解析，边解析边展示，会被js、css的下载、解析、执行所阻塞(但不被图片、视频阻塞)。全局js会在html文档解析阶段执行，如果js有耗时操作一样会阻塞html</li>
         <li>DOMContentLoaded事件被触发时指html文档解析完成(当然包括了阻塞其解析的css、js的完成)，不包含图片等异步资源加载</li>
         <li>loadEventStart指load事件(window.onload)被触发，loadEventEnd-loadEventStart就是load事件的执行时间</li>
-        <li>图片等资源不会阻塞html文档的解析和展示，但会阻塞load事件触发</li>
+        <li>图片等资源不会阻塞html文档的解析和展示，但会阻塞load事件触发。视频的初始加载会阻塞load事件</li>
 
     </ul>
 

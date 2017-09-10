@@ -52,5 +52,18 @@ var server = http.createServer(function (req, res) {
         },15000)
     }
 
+    if(req.url.endsWith("test2.png")){
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        let image = fs.readFileSync("files/test2.png")
+        res.end(image);
+    }
+
+    if(req.url.endsWith("video.mp4")){
+        res.writeHead(200, { 'Content-Type': 'video/mp4' });
+        let video = fs.readFileSync("files/video.mp4")
+        res.end(video);
+
+    }
+
 });
 server.listen(5003);  // start
